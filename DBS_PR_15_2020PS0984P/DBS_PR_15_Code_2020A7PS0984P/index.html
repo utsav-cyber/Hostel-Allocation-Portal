@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>hOSTEL aLLOCATION sYSTEM</title>
+	<meta name="viewport" content="user-scalable=no,width=device-width" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+</head>
+
+<body style="margin:30px">
+	<!--
+	How to View Web SQL data:
+0. Run the source code above on your browser
+1. Press Ctrl + Shift + I
+2. Click on "Application" tab
+3. Double click on "Web SQL" then click on itemDB (name of our database)
+-->
+
+	<div class="container">
+
+		<div class="row">
+			<form>
+				<fieldset>
+
+
+					<legend>Student Id 1 <b>(LEADER)</b></legend>
+					<input type="text" class="form-control" name="" id="sid1">
+					<br>
+					<legend>Student Id 2</legend>
+					<input type="text" class="form-control" name="" id="sid2">
+					<br>
+					<legend>Student Id 3</legend>
+					<input type="text" class="form-control" name="" id="sid3">
+					<br>
+					<legend>Student Id 4 </legend>
+					<input type="text" class="form-control" name="" id="sid4">
+					<br>
+					<legend>Student Id 5</legend>
+					<input type="text" class="form-control" name="" id="sid5">
+					<br>
+					<legend>Priroty Number 1</legend>
+					<input type="number" class="form-control" name="" id="pr1">
+					<br>
+
+					<br>
+					<button type="button" id="insert" class="btn btn-success">Insert</button>
+
+					<button type="button" id="create" class="btn btn-success">Create Table</button>
+
+					<button type="button" id="remove" class="btn btn-danger">Delete Table</button>
+
+					<button type="button" id="list" class="btn btn-success">Fetch Record</button>
+
+					<button type="button" id="makedatabase" class="btn btn-success">Make Initial Database</button>
+
+					<button type="button" id="allocate" class="btn btn-success">Allocate</button>
+
+					<button type="button" id="allotment_table" class="btn btn-primary">Show Allotment Table</button>
+
+					<p><small><b>Note:</b> Table must be created first before inserting or performing any
+							transaction</small></p>
+				</fieldset>
+			</form>
+
+			<hr>
+			<h4>Record</h4>
+			<table class="table table-bordered table-hover" id="itemlist">
+
+			</table>
+
+			<!-- allocation table -->
+			<table class="table table-bordered table-hover" id="allocationtable">
+
+			</table>
+
+
+
+
+		</div>
+
+	</div>
+
+
+
+	<script type="text/javascript">
+
+		var db = openDatabase("itemDB", "1.0", "itemDB", 65535); // itemDB is the database name
+
+		// inserting hostel wali table ka function
+
+		// 
+
+		let winglist=[[0,0,0,0,0,0,0]];
+		let countpr1=0;
+		let countpr2=0;
+		let countpr3=0;
+		$(function () {
+
+			loadData(); //loading our records
+			// maketables();
+
+
+			//CREATING TABLE STARTS HERE
+
+			$("#create").click(function () {
+
+				db.transaction(function (transaction) {
+					var sql = "CREATE TABLE items " +
+						"(wid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+						"sid1 integer NOT NULL," +
+						"sid2 integer NOT NULL," +
+						"sid3 integer NOT NULL," +
+						"sid4 integer NOT NULL," +
+						"sid5 integer NOT NULL," +
+						"pr1 integer NOT NULL )";
+					transaction.executeSql(sql, undefined, function () {
+						alert("Table is created successfully");
+					}, function (transaction, err) {
+						alert(err);
+					})
+				});
+			});
+
+		
+		$("#allocate").click(function () {
+
+db.transaction(function (transaction) {
+	var sql = "CREATE TABLE allotment " +
+		"(sid INTEGER NOT NULL PRIMARY KEY ," +
+		"hid INTEGER NOT NULL," +
+		"rid INTEGER ," +
+		"wid INTEGER NOT NULL )";
+	transaction.executeSql(sql, undefined, function () {
+		alert("Table ALLOTEMENT is created successfully");
+	}, function (transaction, err) {
+		alert("table "+err);
+	})})
+
+	db.transaction(function (transaction) {
+					var sql = "SELECT * FROM items ORDER BY pr1";
+					transaction.executeSql(sql, undefined, function (transaction, result) {
+						
+
+						// $("#itemlist").append('<tr><td><b>WING Id</b></td><td><b>WING_LEADER ID</b></td><td><b>MEMBER 1</b></td><td><b>MEMBER 2</b></td><td><b>MEMBER 3</b></td><td><b>MEMBER 4</b></td><td><b>PRIORITY 1</b></td><td><b>PRIORITY 2</td><tr>');
+						if (result.rows.length) {
+
+							for (var i = 0; i < result.rows.length; i++) {
+								var row = result.rows.item(i);
+								// var item=row.item;
+								// var id=row.id;
+								// var quantity=row.quantity;
+
+								var wid = row.wid;
+								var sid1 = row.sid1;
+								var sid2 = row.sid2;
+								var sid3 = row.sid3;
+								var sid4 = row.sid4;
+								var sid5 = row.sid5;
+								var pr1 = row.pr1;
+
+								// console.log("this is sid1 ="+sid1 );
+								winglist.push([wid,sid1,sid2,sid3,sid4,sid5,pr1]);
+
+								// var pr2 = row.pr2;
+								console.log("this is sid1 ="+sid1 )}};
+								console.log(winglist);
+								winglist=winglist;
+							
+							
+					},function(transaction,err){alert("error in here"+err)});
+
+				})
+
+							 console.log(winglist);
+							if(1==1){
+							
+									
+									
+								
+								
+									
+									db.transaction(function(transaction){
+										var sqlq="INSERT INTO allotment(sid,hid,rid,wid) VALUES(?,?,?,?)";
+										let room_h1=1;
+										let room_h2=1;
+										
+										let room_h3=1;
+										for(var i=1;i<5;i++){
+											let pr01=winglist[i][6];
+
+											///
+											var wid = winglist[i][0];
+											var sid1 = parseInt(winglist[i][1]);
+											var sid2 = parseInt(winglist[i][2]);
+											var sid3 =parseInt(winglist[i][3]);
+											var sid4 = parseInt(winglist[i][4]);
+											var sid5 =parseInt(winglist[i][5]);
+											// var pr1 =winglist[i][6];
+											///
+
+											console.log("Pr01 = "+pr01);
+											console.log("winglist[][] = "+typeof(parseInt(winglist[i][1])));
+											if(pr01==1 && countpr1<=12){
+											// alert(room_h1);
+										transaction.executeSql(sqlq,[sid1,1,room_h1,wid],function(){},function(transaction1,err){alert("error in sid1 insertion " + err)});
+										transaction.executeSql(sqlq,[sid2,1,room_h1+4,wid],function(){},function(){alert("error in sid2 insertion")});
+										transaction.executeSql(sqlq,[sid3,1,room_h1+1,wid],function(){},function(){alert("error in sid3 insertion")});
+										transaction.executeSql(sqlq,[sid4,1,room_h1+2,wid],function(){},function(){alert("error in sid4 insertion")});
+										transaction.executeSql(sqlq,[sid5,1,room_h1+3,wid],function(){},function(){alert("error in sid5 insertion")});
+
+										room_h1=room_h1+5;
+										countpr1++;
+									}
+								
+									else if(pr01==2 && countpr2<=12){
+										transaction.executeSql(sqlq,[sid1,2,room_h2,wid],function(){alert("sid1 inserted in allotment table")},function(transaction1,err){alert("error in sid1 insertion " + err)});
+										transaction.executeSql(sqlq,[sid2,2,room_h2+1,wid],function(){alert("sid2 inserted in allotment table")},function(){alert("error in sid2 insertion")});
+										transaction.executeSql(sqlq,[sid3,2,room_h2+4,wid],function(){alert("sid3 inserted in allotment table")},function(){alert("error in sid3 insertion")});
+										transaction.executeSql(sqlq,[sid4,2,room_h2+2,wid],function(){alert("sid4 inserted in allotment table")},function(){alert("error in sid4 insertion")});
+										transaction.executeSql(sqlq,[sid5,2,room_h2+3,wid],function(){alert("sid5 inserted in allotment table")},function(){alert("error in sid5 insertion")});
+
+										room_h2=room_h2+5;
+										countpr2++;
+								
+								}
+
+								else if(pr01==3 && countpr3<=12){
+										transaction.executeSql(sqlq,[sid1,3,room_h2,wid],function(){alert("sid1 inserted in allotment table")},function(transaction1,err){alert("error in sid1 insertion " + err)});
+										transaction.executeSql(sqlq,[sid2,3,room_h2+3,wid],function(){alert("sid2 inserted in allotment table")},function(){alert("error in sid2 insertion")});
+										transaction.executeSql(sqlq,[sid3,3,room_h2+4,wid],function(){alert("sid3 inserted in allotment table")},function(){alert("error in sid3 insertion")});
+										transaction.executeSql(sqlq,[sid4,3,room_h2+1,wid],function(){alert("sid4 inserted in allotment table")},function(){alert("error in sid4 insertion")});
+										transaction.executeSql(sqlq,[sid5,3,room_h2+2,wid],function(){alert("sid5 inserted in allotment table")},function(){alert("error in sid5 insertion")});
+
+										room_h2=room_h2+5;
+										countpr3++;
+								
+								
+								}
+							}
+
+
+
+								})
+
+							
+							}
+						}
+  
+    );
+
+
+
+
+
+			// CREATING TABLE ENDS HERE
+
+			// $("#makedatabase").click(function () {
+				// maketables();
+				// alert("this is called in make database");
+				// db.transaction(function (transaction) {
+			// 		alert("this is called in transacrtion in make database");
+			// 		var sql = "CREATE TABLE bits" +
+			// 			"(sid INTEGER NOT NULL PRIMARY KEY," +
+			// 			"firstname VARCHAR(20) NOT NULL," +
+			// 			"lastname VARCHAR(20) )";
+
+
+			// 		transaction.executeSQL(sql, undefined, function(){
+			// 			alert("BITS STUDENT TABLE cReateD");
+			// 		}, function (transaction, err) {
+			// 			alert(err + "Error in sql0");
+			// 		})
+			// 	});
+			// });
+
+			//////
+			$("#makedatabase").click(function () {
+
+			db.transaction(function (transaction) {
+		var sql = "CREATE TABLE bits" +
+						"(sid INTEGER NOT NULL PRIMARY KEY," +
+						"firstname VARCHAR(20) NOT NULL," +
+						"lastname VARCHAR(20) )";
+					transaction.executeSql(sql, undefined, function () {
+						alert("Table =  BITS created successfully");
+					}, function (transaction, err) {
+						alert(err);
+					})
+				 }),
+
+			 db.transaction(function (transaction) {
+		
+						var sql0="CREATE TABLE Hostel"+
+        				"(hid integer not null PRIMARY KEY,"+
+        				"hname varchar(20) not null,"+
+						"size INT(5) NOT NULL)" ;
+					transaction.executeSql(sql0, undefined, function () {
+						alert("Table = Hostel created successfully");
+					}, function (transaction, err) {
+						alert(err + "error at hostel table creation");
+					})
+				 }),
+
+				//  room wali table in making
+				db.transaction(function (transaction) {
+
+					var sql0 = "CREATE TABLE rooms" +
+						"(hid integer not null ," +
+						"rid integer not null," +
+						"status integer not null ,"+
+						"PRIMARY KEY(hid,rid))";
+					transaction.executeSql(sql0, undefined, function () {
+						alert("Table = Rooms created successfully");
+					}, function (transaction, err) {
+						alert(err + "error at rooms table creation");
+					})
+				}),
+
+				// insert into rooms
+				db.transaction(function (transaction) {
+					let room_status = [
+
+					[1 , 1 , 0 ],
+        [1 , 2 , 0 ],
+        [1 , 3 , 0 ],
+        [1 , 4 , 0 ],
+        [1 , 5 , 0 ],
+        [1 , 6 , 0 ],
+        [1 , 7 , 0 ],
+        [1 , 8 , 0 ],
+        [1 , 9 , 0 ],
+        [1 , 10 , 0 ],
+        [1 , 11, 0 ],
+        [1 , 12 , 0 ],
+        [1 , 13 , 0 ],
+        [1 , 14 , 0 ],
+        [1 , 15 , 0 ],
+        [1 , 16 , 0 ],
+        [1 , 17 , 0 ],
+        [1 , 18 , 0 ],
+        [1 , 19 , 0 ],
+		[1 , 20 , 0 ],
+        [2 , 1 , 0 ],
+        [2 , 2 , 0 ],
+        [2 , 3 , 0 ],
+        [2 , 4 , 0 ],
+        [2 , 5 , 0 ],
+        [2 , 6 , 0 ],
+        [2 , 7 , 0 ],
+        [2 , 8 , 0 ],
+        [2 , 9 , 0 ],
+        [2 , 10 , 0 ],
+        [2 , 11, 0 ],
+        [2 , 12 , 0 ],
+        [2 , 13 , 0 ],
+        [2 , 14 , 0 ],
+        [2 , 15 , 0 ],
+        [3 , 1 , 0 ],
+        [3 , 2 , 0 ],
+        [3 , 3 , 0 ],
+        [3 , 4 , 0 ],
+        [3 , 5 , 0 ],
+        [3 , 6 , 0 ],
+        [3 , 7 , 0 ],
+        [3 , 8 , 0 ],
+        [3 , 9 , 0 ],
+        [3 , 10 , 0 ],
+        [3 , 11, 0 ],
+        [3 , 12 , 0 ],
+        [3 , 13 , 0 ],
+        [3 , 14 , 0 ],
+        [3 , 15 , 0 ],
+        [3 , 16 , 0 ],
+        [3 , 17 , 0 ],
+        [3 , 18 , 0 ],
+        [3 , 19 , 0 ],
+       [3 , 20 , 0 ],
+		[3 , 21 , 0 ],
+        [3 , 22 , 0 ],
+        [3 , 23 , 0 ],
+        [3 , 24 , 0 ],
+        [3 , 25 , 0 ]]
+
+
+					var sql = "INSERT INTO rooms(hid,rid,status) VALUES(?,?,?)";
+					for (var i = 0; i < 60; i++) {
+					
+						transaction.executeSql(sql, [room_status[i][0], room_status[i][1], room_status[i][2]], function () {
+							console.log("Room Status is feeded succesfully  = " + i);
+						}, function (transaction, err) { alert(err.message); });
+					}
+				}),
+
+
+				/////
+			
+				//  inserting into hostel records
+				
+				db.transaction(function (transaction) {
+					let hostel_rec=[
+        							[1 ,'Vyas' , 20],
+        							[2, 'Ram' , 15],
+        							[3, 'Gandhi' , 20]
+
+
+        							]
+
+
+						var sql = "INSERT INTO Hostel(hid,hname,size) VALUES(?,?,?)";
+						for (var i = 0; i < 3; i++) {
+							transaction.executeSql(sql, [hostel_rec[i][0], hostel_rec[i][1], hostel_rec[i][2]], function () {
+								console.log("Hostels REcords is added successfully = " + i);
+							}, function (transaction, err) { alert(err.message); });
+						}}),
+
+				 db.transaction(function (transaction) {
+						let stud_record = [
+							[1, 'Utsav', 'Goel'],
+							[2, 'Hardik', 'Jain'],
+							[3, 'Aarav', 'Gulati'],
+							[4, 'sidharth', 'gupta'],
+							[5, 'jaysheel', 'shah'],
+							[6, 'rudresh', 'patel'],
+							[7, 'kshitij', 'tandon'],
+							[8, 'parikshit', ' '],
+							[9, 'nimish', 'mehta'],
+							[10, 'kashish', 'arora'],
+							[11, 'sidhant', 'yadav'],
+							[12, 'hardik', 'kumar'],
+							[13, 'lakshay', 'mehra'],
+							[14, 'poojan', 'gandhi'],
+							[15, 'sahil', 'shah'],
+							[16, 'jubhit', 'chaudhry'],
+							[17, 'mayank', 'kumar'],
+							[18, 'jash', 'shah'],
+							[19, 'parth', 'patel'],
+							[20, 'anish', 'gupta'],
+							[21, 'sagar', ' '],
+							[22, 'Risham', 'Bansal'],
+							[23, 'BAANI', 'AJMANI'],
+							[24, 'ADITYA', 'VERMA'],
+							[25, 'AYUSH', 'SHARMA'],
+							[26, 'SANIDHYA', 'VIJAIVARGIA'],
+							[27, 'PATHA', 'ADITHSAI'],
+							[28, 'VIKRANT', 'REWAL'],
+							[29, 'LALIT', 'PACHORI'],
+							[30, 'AYUSH', 'GUPTA'],
+							[31, 'PRAJWAL', 'GUPTA'],
+							[32, 'ADITYA', 'VINAYAK'],
+							[33, 'RITWIK', 'TIWARI'],
+							[34, 'ADITYA', 'SHARMA'],
+							[35, 'AMBUJ', 'SAXENA'],
+							[36, 'RISHABH', 'DHANDHARIA'],
+							[37, 'PARTH', 'SHARMA'],
+							[38, 'ADITYA', 'TRIPATHI'],
+							[39, 'SHIVANSH', 'RUSTAGI'],
+							[40, 'ADITYA', 'KHETAN'],
+							[41, 'RITIK', 'CHANANA'],
+							[42, 'DIVYANSH', 'DUBEY'],
+							[43, 'RAJAT', 'SAINI'],
+							[44, 'Shobhit', 'ARORA'],
+							[45, 'JAY', 'SHARMA'],
+							[46, 'TIKESH', 'VAISHNAV'],
+							[47, 'AARYA', 'ATTREY'],
+							[48, 'ABHAY', 'NARENDRAN'],
+							[49, 'ARCHAJ', 'JAIN'],
+							[50, 'Yugal', 'Joshi'],
+							[51, 'PURU', 'AGARWAL'],
+							[52, 'SIDDHANT', 'SINHA'],
+							[53, 'SHAURYA', 'BHARDWAJ'],
+							[54, 'MRIDUL', 'VIRALKA'],
+							[55, 'AZHAAN', 'ANVER'],
+							[56, 'MANAV', 'BHATNAGAR'],
+							[57, 'CHINMAY', 'DESHMUKH'],
+							[58, 'PARIVESH', 'BAJPAI'],
+							[59, 'YAMANDEEP', 'SINGH']
+
+						]
+
+
+						var sql = "INSERT INTO bits(sid,firstname,lastname) VALUES(?,?,?)";
+						for (var i = 0; i < 59; i++) {
+							transaction.executeSql(sql, [stud_record[i][0], stud_record[i][1], stud_record[i][2]], function () {
+								console.log("Bits STudent made successfully is added successfully = " + i);
+							}, function (transaction, err) { alert(err.message); });
+						}
+
+					
+
+
+
+		});
+	});
+
+			////////
+
+
+
+			//DELETING TABLE STARTS HERE
+			$("#remove").click(function () {
+
+				if (!confirm("Are you sure to delete this table?", "")) return;;
+				db.transaction(function (transaction) {
+					var sql = "DROP TABLE items";
+					transaction.executeSql(sql, undefined, function () {
+						alert("Table is deleted successfully")
+					}, function (transaction, err) {
+						alert(err.message);
+					})
+				}),
+
+				db.transaction(function (transaction) {
+					var sql = "DROP TABLE bits";
+					transaction.executeSql(sql, undefined, function () {
+						alert("bits table is deleted successfully")
+					}, function (transaction, err) {
+						alert(err.message);
+					})
+				}),
+
+				db.transaction(function (transaction) {
+					var sql = "DROP TABLE allotment";
+					transaction.executeSql(sql, undefined, function () {
+						alert("bits table is deleted successfully")
+					}, function (transaction, err) {
+						alert(err.message);
+					})
+				}),
+
+				
+				db.transaction(function (transaction) {
+					var sql = "DROP TABLE rooms";
+					transaction.executeSql(sql, undefined, function () {
+						alert("rooms table is deleted successfully")
+					}, function (transaction, err) {
+						alert(err.message);
+					})
+				}),
+
+
+				db.transaction(function (transaction) {
+					var sql = "DROP TABLE hostel";
+					transaction.executeSql(sql, undefined, function () {
+						alert("Table is deleted successfully")
+					}, function (transaction, err) {
+						alert(err.message);
+					})
+				});
+			});
+			//DELETING TABLE ENDS HERE
+
+
+
+			//INSERTING DATA INTO TABLE
+
+			$("#insert").click(function () {
+				// var item=$("#item").val();
+				// var qty=$("#quantity").val();
+
+				var sid1 = $("#sid1").val();
+				var sid2 = $("#sid2").val();
+				var sid3 = $("#sid3").val();
+				var sid4 = $("#sid4").val();
+				var sid5 = $("#sid5").val();
+				var pr1 = $("#pr1").val();
+				// var pr2 = $("#pr2").val();
+
+
+
+
+				db.transaction(function (transaction) {
+					var sql = "INSERT INTO items(sid1,sid2,sid3,sid4,sid5,pr1) VALUES(?,?,?,?,?,?)";
+
+					transaction.executeSql(sql, [sid1,sid2,sid3,sid4,sid5,pr1], function () {
+							alert("Wing is added successfully ");
+						}, function (transaction, err) {
+							alert(err.message);
+						})
+
+				})
+			})
+			//INSERTING DATA ENDS HERE
+
+
+			//FETCHING OUR RECORD
+			$("#list").click(function () {
+				loadData();
+			})
+
+
+
+			//FUNCTION TO LOAD OUR RECORDS
+			function loadData() {
+				$("#itemlist").children().remove();
+				db.transaction(function (transaction) {
+					var sql = "SELECT * FROM items ORDER BY wid DESC";
+					transaction.executeSql(sql, undefined, function (transaction, result) {
+
+						$("#itemlist").append('<tr><td><b>WING Id</b></td><td><b>WING_LEADER ID</b></td><td><b>MEMBER 1</b></td><td><b>MEMBER 2</b></td><td><b>MEMBER 3</b></td><td><b>MEMBER 4</b></td><td><b>PRIORITY 1</b></td><td><b>PRIORITY 2</td><tr>');
+						if (result.rows.length) {
+
+							for (var i = 0; i < result.rows.length; i++) {
+								var row = result.rows.item(i);
+								// var item=row.item;
+								// var id=row.id;
+								// var quantity=row.quantity;
+
+								var wid = row.wid;
+								var sid1 = row.sid1;
+								var sid2 = row.sid2;
+								var sid3 = row.sid3;
+								var sid4 = row.sid4;
+								var sid5 = row.sid5;
+								var pr1 = row.pr1;
+								// var pr2 = row.pr2;
+
+
+								$("#itemlist").append('<tr id="del"' + wid + '><td>' + wid + '</td><td>' + sid1 + '</td><td id="newqty0"' + wid + '>' + sid2 + '</td><td id="newqty1' + wid + '">' + sid3 + '</td><td id="newqty2"' + wid + '>' + sid4 + '</td><td id="newqty4"' + wid + '>' + sid5 + '</td><td id="newqty5"' + wid + '>' + pr1  + '</td><td><a href="#" class="btn btn-danger deleteitem" data-id="' + wid + '">Delete</a> <a href="#" class="btn btn-primary updateitem" data-id="' + wid + '">Update</a></td></tr>');
+							}
+						} else {
+							$("#itemlist").append('<tr><td colspan="8" align="center">No Data Found</td></tr>');
+						}
+					}, function (transaction, err) {
+						alert('No table found. Click on "Create Table" to create table now');
+						// alert(err);
+					})
+				})}
+
+				// show the allocation table function
+					//FUNCTION TO LOAD OUR RECORDS
+   ////
+   $("#allotment_table").click(function () {
+				loadallotmentdata();
+			})
+			////
+
+			function loadallotmentdata() {
+				$("#itemlist").children().remove();
+				$("#allocationtable").children().remove();
+				
+				db.transaction(function (transaction) {
+					var sql = "SELECT * FROM allotment ORDER BY wid ";
+					transaction.executeSql(sql, undefined, function (transaction, result) {
+
+						$("#allocationtable").append('<tr><td><b>WING Id</b></td><td><b>STUDENT-ID</b></td><td><b>HOSTEL-ID</b></td><td><b>ROOM-ID</b></td><tr>');
+						if (result.rows.length) {
+
+							for (var i = 0; i < result.rows.length; i++) {
+								var row = result.rows.item(i);
+								// var item=row.item;
+								// var id=row.id;
+								// var quantity=row.quantity;
+
+								var wid = row.wid;
+								var sid = row.sid;
+								var hid = row.hid;
+								var roomid = row.rid;
+								// var pr2 = row.pr2;
+
+
+								$("#allocationtable").append('<tr><td><b>'+wid+'</b></td><td><b>'+sid+'</b></td><td><b>'+hid+'</b></td><td><b>'+roomid+'</b></td><tr>');
+							}
+						} else {
+							$("#allocationtable").append('<tr><td colspan="4" align="center">No Data Found</td></tr>');
+						}
+					}, function (transaction, err) {
+						alert('Allotment table not fetched');
+						// alert(err);
+					})
+				})}
+				////
+
+
+				//  funstion to make tables bits_students and
+
+
+
+				//setTimeout was used to execute codes inside it to be loaded after records are loaded/fetched.
+
+				setTimeout(function () {
+					$(".deleteitem").click(function () {
+						var sure = confirm("Are you sure to delete this item?");
+						if (sure === true) {
+							var id = $(this).data("id");
+							db.transaction(function (transaction) {
+								var sql = "DELETE FROM items where id=?";
+								transaction.executeSql(sql, [id], function () {
+									$("#del" + id).fadeOut();
+									alert("Item is deleted successfully");
+								}, function (transaction, err) {
+									alert(err.message);
+								})
+							});
+						}
+					})
+
+					$(".updateitem").click(function () {
+						var qty = prompt("Kindly enter new quantity", 1);
+						if (qty !== null) {
+							var id = $(this).data("id");
+							db.transaction(function (transaction) {
+								var sql = "UPDATE items SET quantity=? where id=?";
+								transaction.executeSql(sql, [qty, id], function () {
+									$("#newqty" + id).html(qty);
+									alert("Item is updated successfully");
+								}, function (transaction, err) {
+									alert(err.message);
+								})
+							});
+						}
+					})
+
+				}, 1000);
+
+
+			},
+			//END OF loadData() function
+
+
+			function maketables() {
+
+				db.transaction(function (transaction) {
+					var sql0 = "CREATE TABLE bits" +
+						"(sid integer not null PRIMARY KEY," +
+						"firstname varchar(20) not null," +
+						"lastname varchar(20) )";
+
+
+					transaction.executeSQL(sql0, undefined, function(){
+						alert("BITS STUDENT TABLE cReateD");
+					}, function (transaction, err) {
+						alert(err + "Error in sql0");
+					})
+				},
+
+
+
+					db.transaction(function (transaction) {
+						let stud_record = [
+							[1, 'Utsav', 'Goel'],
+							[2, 'Hardik', 'Jain'],
+							[3, 'Aarav', 'Gulati'],
+							[4, 'sidharth', 'gupta'],
+							[5, 'jaysheel', 'shah'],
+							[6, 'rudresh', 'patel'],
+							[7, 'kshitij', 'tandon'],
+							[8, 'parikshit', ' '],
+							[9, 'nimish', 'mehta'],
+							[10, 'kashish', 'arora'],
+							[11, 'sidhant', 'yadav'],
+							[12, 'hardik', 'kumar'],
+							[13, 'lakshay', 'mehra'],
+							[14, 'poojan', 'gandhi'],
+							[15, 'sahil', 'shah'],
+							[16, 'jubhit', 'chaudhry'],
+							[17, 'mayank', 'kumar'],
+							[18, 'jash', 'shah'],
+							[19, 'parth', 'patel'],
+							[20, 'anish', 'gupta'],
+							[21, 'sagar', ' '],
+							[22, 'Risham', 'Bansal'],
+							[23, 'BAANI', 'AJMANI'],
+							[24, 'ADITYA', 'VERMA'],
+							[25, 'AYUSH', 'SHARMA'],
+							[26, 'SANIDHYA', 'VIJAIVARGIA'],
+							[27, 'PATHA', 'ADITHSAI'],
+							[28, 'VIKRANT', 'REWAL'],
+							[29, 'LALIT', 'PACHORI'],
+							[30, 'AYUSH', 'GUPTA'],
+							[31, 'PRAJWAL', 'GUPTA'],
+							[32, 'ADITYA', 'VINAYAK'],
+							[33, 'RITWIK', 'TIWARI'],
+							[34, 'ADITYA', 'SHARMA'],
+							[35, 'AMBUJ', 'SAXENA'],
+							[36, 'RISHABH', 'DHANDHARIA'],
+							[37, 'PARTH', 'SHARMA'],
+							[38, 'ADITYA', 'TRIPATHI'],
+							[39, 'SHIVANSH', 'RUSTAGI'],
+							[40, 'ADITYA', 'KHETAN'],
+							[41, 'RITIK', 'CHANANA'],
+							[42, 'DIVYANSH', 'DUBEY'],
+							[43, 'RAJAT', 'SAINI'],
+							[44, 'Shobhit', 'ARORA'],
+							[45, 'JAY', 'SHARMA'],
+							[46, 'TIKESH', 'VAISHNAV'],
+							[47, 'AARYA', 'ATTREY'],
+							[48, 'ABHAY', 'NARENDRAN'],
+							[49, 'ARCHAJ', 'JAIN'],
+							[50, 'Yugal', 'Joshi'],
+							[51, 'PURU', 'AGARWAL'],
+							[52, 'SIDDHANT', 'SINHA'],
+							[53, 'SHAURYA', 'BHARDWAJ'],
+							[54, 'MRIDUL', 'VIRALKA'],
+							[55, 'AZHAAN', 'ANVER'],
+							[56, 'MANAV', 'BHATNAGAR'],
+							[57, 'CHINMAY', 'DESHMUKH'],
+							[58, 'PARIVESH', 'BAJPAI'],
+							[59, 'YAMANDEEP', 'SINGH']
+
+						]
+
+
+						var sql = "INSERT INTO bits(sid,firstname,lastname) VALUES(?,?,?)";
+						for (var i = 0; i < 59; i++) {
+							transaction.executeSql(sql, [stud_record[i][0], stud_record[i][1], stud_record[i][2]], function () {
+								console.log("Bits STudent made successfully is added successfully = " + i);
+							}, function (transaction, err) { alert(err.message); });
+						}
+
+					},
+
+						db.transaction(function (transaction) {
+
+							var sql01 = "CREATE TABLE Hostel" +
+								"(hid integer not null PRIMARY KEY," +
+								"hname varchar(20) not null,"
+							"size integer(5) not null )";
+
+							transaction.executeSQL(sql01, undefined, function () {
+								console.log("Hostel TABLE cReateD")
+							}, function (transaction, err) {
+								console.log(err);
+							})},
+						
+
+
+
+							db.transaction(function (transaction) {
+
+								let hostel_rec = [
+									[1, 'Vyas', 20],
+									[2, 'Ram', 15],
+									[3, 'Gandhi', 25]
+								]
+
+								var sql1 = "INSERT INTO Hostel(hid,hname,size) VALUES(?,?,?)";
+								for (var i = 0; i < 3; i++) {
+									transaction.executeSql(sql1, [hostel_rec[i][0], hostel_rec[i][1], hostel_rec[i][2]], function () {
+										console.log("Hostel Table  made successfully is added successfully = " + i);
+									}, function (transaction, err) { console.log(err.message); });
+
+
+
+
+
+
+								}})
+
+						)
+
+
+					))
+							
+				
+				
+				}
+			
+		
+			);
+		
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+
+</body>
+
+</html>
